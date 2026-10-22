@@ -169,6 +169,11 @@ LOCAL_STACK=1 pnpm --filter @partspilot/e2e exec playwright test
 `AI_PROVIDER=mock` returns the same canned parts and plan for every photo. Use it only
 for tests.
 
+## License
+
+Code: [MIT](LICENSE). The bundled part data keeps its own licences (below); if you
+redistribute `data/`, keep its attribution and share-alike terms.
+
 ## Credits
 
 Part data comes from the [Fritzing parts library](https://github.com/fritzing/fritzing-parts)
