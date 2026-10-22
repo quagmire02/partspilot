@@ -1,0 +1,32 @@
+{
+  "name": "@partspilot/capture",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build && node scripts/postbuild.mjs",
+    "icons": "node scripts/icons.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@marsidev/react-turnstile": "1.6.2",
+    "@partspilot/shared": "workspace:*",
+    "@supabase/supabase-js": "2.118.0",
+    "heic2any": "0.0.4",
+    "idb-keyval": "6.3.0",
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "workbox-background-sync": "7.4.1",
+    "workbox-core": "7.4.1",
+    "workbox-precaching": "7.4.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "esbuild": "0.28.2",
+    "workbox-build": "7.4.1"
+  }
+}

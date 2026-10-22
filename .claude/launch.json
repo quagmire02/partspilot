@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "capture",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@partspilot/api", "exec", "wrangler", "pages", "dev", "../capture/out", "--port", "3000", "--ip", "localhost"],
+      "port": 3000
+    },
+    {
+      "name": "desktop-web",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@partspilot/desktop", "dev"],
+      "port": 1420
+    },
+    {
+      "name": "api",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@partspilot/api", "dev:local"],
+      "port": 8787
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# Repository secret scan (CI). Extends the default rules; allow-lists only values that
+# are public by design: Cloudflare's published Turnstile *test* keys and the Supabase
+# CLI's default *local* JWT secret, plus the security scanner's own test fixtures.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "public test/dev values"
+regexes = [
+  '''[123]x0{31}AA''',
+  '''[123]x0{20}AA''',
+  '''super-secret-jwt-token-with-at-least-32-characters-long''',
+]
+paths = [
+  '''security/test/checks\.test\.ts''',
+  '''pnpm-lock\.yaml''',
+]

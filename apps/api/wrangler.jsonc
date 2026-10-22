@@ -1,0 +1,66 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "partspilot-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+
+  "vars": {
+    "AI_PROVIDER": "gemini",
+    "GEMINI_MODEL": "gemini-3.8-flash",
+    "GEMINI_EMBED_MODEL": "gemini-embedding-001",
+    "PHOTO_BUCKET": "photos",
+    // Exact origins only. Desktop (Tauri 2 on Windows) serves from http://tauri.localhost.
+    "ALLOWED_ORIGINS": "https://capture.partspilot.app,http://tauri.localhost",
+    "SUPABASE_URL": "https://YOUR-PROJECT.supabase.co"
+  },
+  // Secrets (wrangler secret put): SUPABASE_SERVICE_ROLE_KEY, TURNSTILE_SECRET, GEMINI_API_KEY
+
+  "queues": {
+    "producers": [{ "binding": "JOBS_QUEUE", "queue": "pp-jobs" }],
+    "consumers": [
+      {
+        "queue": "pp-jobs",
+        "max_batch_size": 4,
+        "max_batch_timeout": 1,
+        "max_retries": 3,
+        "dead_letter_queue": "pp-jobs-dlq"
+      },
+      { "queue": "pp-jobs-dlq", "max_batch_size": 10, "max_batch_timeout": 5 }
+    ]
+  },
+
+  "ratelimits": [
+    { "name": "RL_IP", "namespace_id": "1001", "simple": { "limit": 120, "period": 60 } },
+    { "name": "RL_USER", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } },
+    { "name": "RL_UPLOAD", "namespace_id": "1003", "simple": { "limit": 6, "period": 60 } }
+  ],
+
+  "triggers": { "crons": ["17 3 * * *"] },
+
+  "limits": { "cpu_ms": 60000 },
+
+  "env": {
+    "local": {
+      // AI settings come from .dev.vars (written by `pnpm run setup` from the root .env).
+      "vars": {
+        "PHOTO_BUCKET": "photos",
+        "ALLOWED_ORIGINS": "http://localhost:3000,http://localhost:1420,http://tauri.localhost",
+        "SUPABASE_URL": "http://127.0.0.1:54321"
+      },
+      "queues": {
+        "producers": [{ "binding": "JOBS_QUEUE", "queue": "pp-jobs" }],
+        "consumers": [
+          { "queue": "pp-jobs", "max_batch_size": 4, "max_batch_timeout": 1, "max_retries": 3, "dead_letter_queue": "pp-jobs-dlq" },
+          { "queue": "pp-jobs-dlq", "max_batch_size": 10, "max_batch_timeout": 5 }
+        ]
+      },
+      "ratelimits": [
+        { "name": "RL_IP", "namespace_id": "1001", "simple": { "limit": 120, "period": 60 } },
+        { "name": "RL_USER", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } },
+        { "name": "RL_UPLOAD", "namespace_id": "1003", "simple": { "limit": 6, "period": 60 } }
+      ]
+    }
+  }
+}

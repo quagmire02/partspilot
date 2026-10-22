@@ -1,0 +1,13 @@
+packages:
+  - apps/*
+  - packages/*
+  - data
+  - security
+  - e2e
+
+onlyBuiltDependencies:
+  - esbuild
+  - workerd
+  - sharp
+  - supabase
+  - "@tauri-apps/cli"

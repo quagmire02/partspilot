@@ -1,0 +1,14 @@
+export * from "./provider";
+export { createGeminiProvider, simplifySchema, type GeminiOptions } from "./gemini";
+export { createMockProvider, hashEmbedding, MOCK_DETECTION } from "./mock";
+export type { CatalogAccess, CatalogMatchRow, ReferenceRow } from "./catalog";
+export { detectAll, detectImage, toImageDetection, RawDetection } from "./detect";
+export { matchItems, modelTokens, scoreCandidates, calibrate, type MatchItem } from "./matcher";
+export { classifyIntent, screenGoal } from "./intent";
+export { planJob, planSingle, rankReferencesByKeywords, ideasFromInventory } from "./planner";
+export { computeBom, verdictFor, toPlanResult, ASSUMED_AVAILABLE } from "./postprocess";
+export { buildDiagram } from "./diagram";
+export { describeAllowedParts, describePart } from "./context";
+export { createEngine, type Engine } from "./engine";
+export { createOpenAiCompatProvider, extractJson, type OpenAiCompatOptions } from "./openai";
+export { providerFromConfig, configFingerprint, type AiConfig } from "./config";

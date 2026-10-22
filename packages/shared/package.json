@@ -1,0 +1,21 @@
+{
+  "name": "@partspilot/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "openapi": "tsx scripts/openapi.ts"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@asteasolutions/zod-to-openapi": "9.1.0",
+    "tsx": "4.23.15"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@partspilot/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local --persist-to ../../.wrangler/state",
+    "dev:local": "wrangler dev --env local --port 8787 --persist-to ../../.wrangler/state --show-interactive-dev-session=false",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "db:start": "supabase start --workdir ../..",
+    "db:stop": "supabase stop --workdir ../..",
+    "db:reset": "supabase db reset --workdir ../..",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings src/worker-configuration.d.ts"
+  },
+  "dependencies": {
+    "@partspilot/shared": "workspace:*",
+    "@supabase/supabase-js": "2.118.0",
+    "hono": "4.13.13",
+    "jose": "6.2.13",
+    "zod": "4.6.7",
+    "@partspilot/ai": "workspace:*",
+    "@partspilot/rules": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261019.1",
+    "@electric-sql/pglite": "0.5.10",
+    "supabase": "2.121.0",
+    "wrangler": "4.151.3",
+    "@electric-sql/pglite-pgvector": "0.0.11",
+    "vitest": "4.1.12"
+  }
+}

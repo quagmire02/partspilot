@@ -1,0 +1,809 @@
+{
+ "source": "https://gitlab.com/kicad/libraries/kicad-symbols",
+ "commit": "9280a937942c74c7d6fd5148a2d49ee7d87773d1",
+ "license": "CC-BY-SA-4.0 with KiCad libraries exception",
+ "symbols": {
+  "MCU_Module:Arduino_UNO_R3": [
+   {
+    "type": "no_connect",
+    "name": "NC",
+    "number": "1"
+   },
+   {
+    "type": "output",
+    "name": "IOREF",
+    "number": "2"
+   },
+   {
+    "type": "input",
+    "name": "RESET",
+    "number": "3"
+   },
+   {
+    "type": "power_out",
+    "name": "3V3",
+    "number": "4"
+   },
+   {
+    "type": "power_out",
+    "name": "+5V",
+    "number": "5"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "6"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "7"
+   },
+   {
+    "type": "power_in",
+    "name": "VIN",
+    "number": "8"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A0",
+    "number": "9"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A1",
+    "number": "10"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A2",
+    "number": "11"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A3",
+    "number": "12"
+   },
+   {
+    "type": "bidirectional",
+    "name": "SDA/A4",
+    "number": "13"
+   },
+   {
+    "type": "bidirectional",
+    "name": "SCL/A5",
+    "number": "14"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D0/RX",
+    "number": "15"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D1/TX",
+    "number": "16"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D2",
+    "number": "17"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D3",
+    "number": "18"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D4",
+    "number": "19"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D5",
+    "number": "20"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D6",
+    "number": "21"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D7",
+    "number": "22"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D8",
+    "number": "23"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D9",
+    "number": "24"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D10",
+    "number": "25"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D11",
+    "number": "26"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D12",
+    "number": "27"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D13",
+    "number": "28"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "29"
+   },
+   {
+    "type": "input",
+    "name": "AREF",
+    "number": "30"
+   },
+   {
+    "type": "bidirectional",
+    "name": "SDA/A4",
+    "number": "31"
+   },
+   {
+    "type": "bidirectional",
+    "name": "SCL/A5",
+    "number": "32"
+   }
+  ],
+  "MCU_Module:Arduino_Nano_v3.x": [
+   {
+    "type": "bidirectional",
+    "name": "D1/TX",
+    "number": "1"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D0/RX",
+    "number": "2"
+   },
+   {
+    "type": "input",
+    "name": "RESET",
+    "number": "3"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "4"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D2",
+    "number": "5"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D3",
+    "number": "6"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D4",
+    "number": "7"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D5",
+    "number": "8"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D6",
+    "number": "9"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D7",
+    "number": "10"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D8",
+    "number": "11"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D9",
+    "number": "12"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D10",
+    "number": "13"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D11",
+    "number": "14"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D12",
+    "number": "15"
+   },
+   {
+    "type": "bidirectional",
+    "name": "D13",
+    "number": "16"
+   },
+   {
+    "type": "power_out",
+    "name": "3V3",
+    "number": "17"
+   },
+   {
+    "type": "input",
+    "name": "AREF",
+    "number": "18"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A0",
+    "number": "19"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A1",
+    "number": "20"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A2",
+    "number": "21"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A3",
+    "number": "22"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A4",
+    "number": "23"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A5",
+    "number": "24"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A6",
+    "number": "25"
+   },
+   {
+    "type": "bidirectional",
+    "name": "A7",
+    "number": "26"
+   },
+   {
+    "type": "power_out",
+    "name": "+5V",
+    "number": "27"
+   },
+   {
+    "type": "input",
+    "name": "RESET",
+    "number": "28"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "29"
+   },
+   {
+    "type": "power_in",
+    "name": "VIN",
+    "number": "30"
+   }
+  ],
+  "MCU_Module:RaspberryPi_Pico": [
+   {
+    "type": "bidirectional",
+    "name": "GPIO0",
+    "number": "1"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO1",
+    "number": "2"
+   },
+   {
+    "type": "power_out",
+    "name": "GND",
+    "number": "3"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO2",
+    "number": "4"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO3",
+    "number": "5"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO4",
+    "number": "6"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO5",
+    "number": "7"
+   },
+   {
+    "type": "passive",
+    "name": "GND",
+    "number": "8"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO6",
+    "number": "9"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO7",
+    "number": "10"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO8",
+    "number": "11"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO9",
+    "number": "12"
+   },
+   {
+    "type": "passive",
+    "name": "GND",
+    "number": "13"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO10",
+    "number": "14"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO11",
+    "number": "15"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO12",
+    "number": "16"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO13",
+    "number": "17"
+   },
+   {
+    "type": "passive",
+    "name": "GND",
+    "number": "18"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO14",
+    "number": "19"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO15",
+    "number": "20"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO16",
+    "number": "21"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO17",
+    "number": "22"
+   },
+   {
+    "type": "passive",
+    "name": "GND",
+    "number": "23"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO18",
+    "number": "24"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO19",
+    "number": "25"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO20",
+    "number": "26"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO21",
+    "number": "27"
+   },
+   {
+    "type": "passive",
+    "name": "GND",
+    "number": "28"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO22",
+    "number": "29"
+   },
+   {
+    "type": "passive",
+    "name": "RUN",
+    "number": "30"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO26_ADC0",
+    "number": "31"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO27_ADC1",
+    "number": "32"
+   },
+   {
+    "type": "power_out",
+    "name": "AGND",
+    "number": "33"
+   },
+   {
+    "type": "bidirectional",
+    "name": "GPIO28_ADC2",
+    "number": "34"
+   },
+   {
+    "type": "power_in",
+    "name": "ADC_VREF",
+    "number": "35"
+   },
+   {
+    "type": "power_out",
+    "name": "3V3",
+    "number": "36"
+   },
+   {
+    "type": "passive",
+    "name": "3V3_EN",
+    "number": "37"
+   },
+   {
+    "type": "passive",
+    "name": "GND",
+    "number": "38"
+   },
+   {
+    "type": "power_in",
+    "name": "VSYS",
+    "number": "39"
+   },
+   {
+    "type": "power_out",
+    "name": "VBUS",
+    "number": "40"
+   }
+  ],
+  "Driver_Motor:L293D": [
+   {
+    "type": "input",
+    "name": "EN1,2",
+    "number": "1"
+   },
+   {
+    "type": "input",
+    "name": "1A",
+    "number": "2"
+   },
+   {
+    "type": "output",
+    "name": "1Y",
+    "number": "3"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "4"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "5"
+   },
+   {
+    "type": "output",
+    "name": "2Y",
+    "number": "6"
+   },
+   {
+    "type": "input",
+    "name": "2A",
+    "number": "7"
+   },
+   {
+    "type": "power_in",
+    "name": "VCC2",
+    "number": "8"
+   },
+   {
+    "type": "input",
+    "name": "EN3,4",
+    "number": "9"
+   },
+   {
+    "type": "input",
+    "name": "3A",
+    "number": "10"
+   },
+   {
+    "type": "output",
+    "name": "3Y",
+    "number": "11"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "12"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "13"
+   },
+   {
+    "type": "output",
+    "name": "4Y",
+    "number": "14"
+   },
+   {
+    "type": "input",
+    "name": "4A",
+    "number": "15"
+   },
+   {
+    "type": "power_in",
+    "name": "VCC1",
+    "number": "16"
+   }
+  ],
+  "Driver_Motor:Pololu_Breakout_A4988": [
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "1"
+   },
+   {
+    "type": "power_in",
+    "name": "VDD",
+    "number": "2"
+   },
+   {
+    "type": "output",
+    "name": "1B",
+    "number": "3"
+   },
+   {
+    "type": "output",
+    "name": "1A",
+    "number": "4"
+   },
+   {
+    "type": "output",
+    "name": "2A",
+    "number": "5"
+   },
+   {
+    "type": "output",
+    "name": "2B",
+    "number": "6"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "7"
+   },
+   {
+    "type": "power_in",
+    "name": "VMOT",
+    "number": "8"
+   },
+   {
+    "type": "input",
+    "name": "ENABLE",
+    "number": "9"
+   },
+   {
+    "type": "input",
+    "name": "MS1",
+    "number": "10"
+   },
+   {
+    "type": "input",
+    "name": "MS2",
+    "number": "11"
+   },
+   {
+    "type": "input",
+    "name": "MS3",
+    "number": "12"
+   },
+   {
+    "type": "input",
+    "name": "RESET",
+    "number": "13"
+   },
+   {
+    "type": "input",
+    "name": "SLEEP",
+    "number": "14"
+   },
+   {
+    "type": "input",
+    "name": "STEP",
+    "number": "15"
+   },
+   {
+    "type": "input",
+    "name": "DIR",
+    "number": "16"
+   }
+  ],
+  "Driver_Motor:TB6612FNG": [
+   {
+    "type": "output",
+    "name": "AO1",
+    "number": "1"
+   },
+   {
+    "type": "passive",
+    "name": "AO1",
+    "number": "2"
+   },
+   {
+    "type": "power_in",
+    "name": "PGND1",
+    "number": "3"
+   },
+   {
+    "type": "passive",
+    "name": "PGND1",
+    "number": "4"
+   },
+   {
+    "type": "output",
+    "name": "AO2",
+    "number": "5"
+   },
+   {
+    "type": "passive",
+    "name": "AO2",
+    "number": "6"
+   },
+   {
+    "type": "output",
+    "name": "BO2",
+    "number": "7"
+   },
+   {
+    "type": "passive",
+    "name": "BO2",
+    "number": "8"
+   },
+   {
+    "type": "power_in",
+    "name": "PGND2",
+    "number": "9"
+   },
+   {
+    "type": "passive",
+    "name": "PGND2",
+    "number": "10"
+   },
+   {
+    "type": "output",
+    "name": "BO1",
+    "number": "11"
+   },
+   {
+    "type": "passive",
+    "name": "BO1",
+    "number": "12"
+   },
+   {
+    "type": "power_in",
+    "name": "VM2",
+    "number": "13"
+   },
+   {
+    "type": "power_in",
+    "name": "VM3",
+    "number": "14"
+   },
+   {
+    "type": "input",
+    "name": "PWMB",
+    "number": "15"
+   },
+   {
+    "type": "input",
+    "name": "BIN2",
+    "number": "16"
+   },
+   {
+    "type": "input",
+    "name": "BIN1",
+    "number": "17"
+   },
+   {
+    "type": "power_in",
+    "name": "GND",
+    "number": "18"
+   },
+   {
+    "type": "input",
+    "name": "STBY",
+    "number": "19"
+   },
+   {
+    "type": "power_in",
+    "name": "VCC",
+    "number": "20"
+   },
+   {
+    "type": "input",
+    "name": "AIN1",
+    "number": "21"
+   },
+   {
+    "type": "input",
+    "name": "AIN2",
+    "number": "22"
+   },
+   {
+    "type": "input",
+    "name": "PWMA",
+    "number": "23"
+   },
+   {
+    "type": "power_in",
+    "name": "VM1",
+    "number": "24"
+   }
+  ]
+ }
+}

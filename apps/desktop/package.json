@@ -1,0 +1,41 @@
+{
+  "name": "@partspilot/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:web": "vite build",
+    "tauri": "tauri",
+    "dev:app": "tauri dev",
+    "build:installer": "node scripts/gen-config.mjs && tauri build --config src-tauri/tauri.generated.json",
+    "icons": "node scripts/icon.mjs && tauri icon src-tauri/app-icon.png",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@partspilot/shared": "workspace:*",
+    "@supabase/supabase-js": "2.118.0",
+    "@tauri-apps/api": "2.12.4",
+    "@tauri-apps/plugin-autostart": "2.7.0",
+    "@tauri-apps/plugin-clipboard-manager": "2.5.0",
+    "@tauri-apps/plugin-deep-link": "2.6.2",
+    "@tauri-apps/plugin-notification": "2.7.0",
+    "@tauri-apps/plugin-opener": "2.7.2",
+    "@wokwi/elements": "1.9.2",
+    "dompurify": "3.4.17",
+    "lit": "3.3.3",
+    "marked": "18.1.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tauri-plugin-keyring-api": "0.1.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "jsdom": "27.4.0",
+    "vite": "8.3.4"
+  }
+}

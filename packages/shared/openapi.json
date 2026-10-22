@@ -1,0 +1,2617 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "PartsPilot API",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.partspilot.app"
+    }
+  ],
+  "security": [
+    {
+      "supabaseJwt": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "supabaseJwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Supabase Auth access token. Required on every request."
+      }
+    },
+    "schemas": {
+      "MeResponse": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quota": {
+            "type": "object",
+            "properties": {
+              "limit": {
+                "type": "integer"
+              },
+              "used": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "remaining": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "resets_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "limit",
+              "used",
+              "remaining",
+              "resets_at"
+            ]
+          }
+        },
+        "required": [
+          "user_id",
+          "email",
+          "quota"
+        ]
+      },
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "unauthorized",
+                  "forbidden",
+                  "rate_limited",
+                  "turnstile_failed",
+                  "ticket_invalid",
+                  "quota_exceeded",
+                  "bad_request",
+                  "not_found",
+                  "conflict",
+                  "payload_too_large",
+                  "too_many_photos",
+                  "no_photos",
+                  "unsupported_media_type",
+                  "heic_not_converted",
+                  "image_too_small",
+                  "image_corrupt",
+                  "goal_too_long",
+                  "unknown_part",
+                  "photos_unusable",
+                  "no_parts_detected",
+                  "model_output_invalid",
+                  "model_unavailable",
+                  "plan_invalid_after_repairs",
+                  "internal"
+                ]
+              },
+              "message": {
+                "type": "string"
+              },
+              "retry_after_s": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "Quota": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "used": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "remaining": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "resets_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "limit",
+          "used",
+          "remaining",
+          "resets_at"
+        ]
+      },
+      "UploadTicketsResponse": {
+        "type": "object",
+        "properties": {
+          "tickets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "expires_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "expires_at"
+              ]
+            }
+          }
+        },
+        "required": [
+          "tickets"
+        ]
+      },
+      "CreateJobResponse": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "processing"
+            ]
+          },
+          "duplicate": {
+            "type": "boolean"
+          },
+          "quota": {
+            "type": "object",
+            "properties": {
+              "limit": {
+                "type": "integer"
+              },
+              "used": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "remaining": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "resets_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "limit",
+              "used",
+              "remaining",
+              "resets_at"
+            ]
+          }
+        },
+        "required": [
+          "job_id",
+          "status",
+          "duplicate",
+          "quota"
+        ]
+      },
+      "JobListResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "photo",
+                    "inventory"
+                  ]
+                },
+                "goal": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "intent": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "specific",
+                    "discovery",
+                    null
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "processing",
+                    "needs_check",
+                    "ready",
+                    "needs_review"
+                  ]
+                },
+                "stage": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "detecting",
+                    "matching",
+                    "awaiting_confirmation",
+                    "planning",
+                    "validating",
+                    "rendering",
+                    "done",
+                    "failed"
+                  ]
+                },
+                "plan_version": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "error_code": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "unauthorized",
+                    "forbidden",
+                    "rate_limited",
+                    "turnstile_failed",
+                    "ticket_invalid",
+                    "quota_exceeded",
+                    "bad_request",
+                    "not_found",
+                    "conflict",
+                    "payload_too_large",
+                    "too_many_photos",
+                    "no_photos",
+                    "unsupported_media_type",
+                    "heic_not_converted",
+                    "image_too_small",
+                    "image_corrupt",
+                    "goal_too_long",
+                    "unknown_part",
+                    "photos_unusable",
+                    "no_parts_detected",
+                    "model_output_invalid",
+                    "model_unavailable",
+                    "plan_invalid_after_repairs",
+                    "internal",
+                    null
+                  ]
+                },
+                "photo_count": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4
+                },
+                "summary": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "title": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "default": null
+                    },
+                    "verdict": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "enum": [
+                        "yes",
+                        "yes_missing",
+                        "no_closest",
+                        "refused",
+                        null
+                      ],
+                      "default": null
+                    },
+                    "missing_count": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0,
+                      "default": null
+                    },
+                    "needs_check_count": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0,
+                      "default": null
+                    },
+                    "idea_titles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "default": []
+                    }
+                  }
+                },
+                "thumbnail_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "id",
+                "created_at",
+                "updated_at",
+                "source",
+                "goal",
+                "intent",
+                "status",
+                "stage",
+                "plan_version",
+                "error_code",
+                "photo_count",
+                "summary",
+                "thumbnail_url"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "JobDetailResponse": {
+        "type": "object",
+        "properties": {
+          "job": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "photo",
+                  "inventory"
+                ]
+              },
+              "goal": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "intent": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "specific",
+                  "discovery",
+                  null
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "processing",
+                  "needs_check",
+                  "ready",
+                  "needs_review"
+                ]
+              },
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "queued",
+                  "detecting",
+                  "matching",
+                  "awaiting_confirmation",
+                  "planning",
+                  "validating",
+                  "rendering",
+                  "done",
+                  "failed"
+                ]
+              },
+              "plan_version": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "error_code": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "unauthorized",
+                  "forbidden",
+                  "rate_limited",
+                  "turnstile_failed",
+                  "ticket_invalid",
+                  "quota_exceeded",
+                  "bad_request",
+                  "not_found",
+                  "conflict",
+                  "payload_too_large",
+                  "too_many_photos",
+                  "no_photos",
+                  "unsupported_media_type",
+                  "heic_not_converted",
+                  "image_too_small",
+                  "image_corrupt",
+                  "goal_too_long",
+                  "unknown_part",
+                  "photos_unusable",
+                  "no_parts_detected",
+                  "model_output_invalid",
+                  "model_unavailable",
+                  "plan_invalid_after_repairs",
+                  "internal",
+                  null
+                ]
+              },
+              "photo_count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4
+              },
+              "summary": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "title": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "default": null
+                  },
+                  "verdict": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "enum": [
+                      "yes",
+                      "yes_missing",
+                      "no_closest",
+                      "refused",
+                      null
+                    ],
+                    "default": null
+                  },
+                  "missing_count": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "default": null
+                  },
+                  "needs_check_count": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "default": null
+                  },
+                  "idea_titles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "default": []
+                  }
+                }
+              }
+            },
+            "required": [
+              "id",
+              "created_at",
+              "updated_at",
+              "source",
+              "goal",
+              "intent",
+              "status",
+              "stage",
+              "plan_version",
+              "error_code",
+              "photo_count",
+              "summary"
+            ]
+          },
+          "photos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 3
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "width": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "height": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "expires_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "index",
+                "url",
+                "width",
+                "height",
+                "expires_at"
+              ]
+            }
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "image_index": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 3
+                },
+                "bbox": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "w": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "h": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y",
+                    "w",
+                    "h"
+                  ]
+                },
+                "label": {
+                  "type": "string"
+                },
+                "visible_text": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "candidates": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part_id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "score": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "part_id",
+                      "name",
+                      "score"
+                    ]
+                  },
+                  "maxItems": 3
+                },
+                "part_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "confidence": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 50
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "auto",
+                    "needs_check",
+                    "confirmed",
+                    "added",
+                    "removed"
+                  ]
+                },
+                "duplicate": {
+                  "type": "boolean",
+                  "default": false
+                }
+              },
+              "required": [
+                "id",
+                "image_index",
+                "bbox",
+                "label",
+                "visible_text",
+                "candidates",
+                "part_id",
+                "name",
+                "confidence",
+                "quantity",
+                "status"
+              ]
+            }
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "single",
+                  "discovery",
+                  "refusal"
+                ]
+              },
+              "plan_version": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "plans": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "summary": {
+                      "type": "string"
+                    },
+                    "verdict": {
+                      "type": "string",
+                      "enum": [
+                        "yes",
+                        "yes_missing",
+                        "no_closest",
+                        "refused"
+                      ]
+                    },
+                    "closest_reason": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "language": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "enum": [
+                        "arduino_cpp",
+                        "micropython",
+                        null
+                      ]
+                    },
+                    "power_mode": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "enum": [
+                        "usb",
+                        "battery",
+                        "external",
+                        null
+                      ]
+                    },
+                    "bom": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ref": {
+                            "type": "string"
+                          },
+                          "part_id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "qty": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "purpose": {
+                            "type": "string"
+                          },
+                          "have": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "ref",
+                          "part_id",
+                          "name",
+                          "qty",
+                          "purpose",
+                          "have"
+                        ]
+                      }
+                    },
+                    "missing": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "part_id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "qty": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "buy_links": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri"
+                                }
+                              },
+                              "required": [
+                                "label",
+                                "url"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "part_id",
+                          "name",
+                          "qty",
+                          "buy_links"
+                        ]
+                      }
+                    },
+                    "connections": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "from": {
+                            "type": "object",
+                            "properties": {
+                              "ref": {
+                                "type": "string",
+                                "pattern": "^[A-Z]{1,4}\\d{1,3}$"
+                              },
+                              "pin": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 24
+                              }
+                            },
+                            "required": [
+                              "ref",
+                              "pin"
+                            ]
+                          },
+                          "to": {
+                            "type": "object",
+                            "properties": {
+                              "ref": {
+                                "type": "string",
+                                "pattern": "^[A-Z]{1,4}\\d{1,3}$"
+                              },
+                              "pin": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 24
+                              }
+                            },
+                            "required": [
+                              "ref",
+                              "pin"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "from",
+                          "to"
+                        ]
+                      }
+                    },
+                    "steps": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "code": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "language": {
+                          "type": "string",
+                          "enum": [
+                            "arduino_cpp",
+                            "micropython"
+                          ]
+                        },
+                        "filename": {
+                          "type": "string"
+                        },
+                        "source": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "language",
+                        "filename",
+                        "source"
+                      ]
+                    },
+                    "libraries": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "install_hint": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "install_hint"
+                        ]
+                      }
+                    },
+                    "safety_notes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "validation": {
+                      "type": "object",
+                      "properties": {
+                        "passed": {
+                          "type": "boolean"
+                        },
+                        "attempts": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "issues": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "string",
+                                "enum": [
+                                  "unknown_part",
+                                  "part_without_profile",
+                                  "unknown_pin",
+                                  "unknown_ref",
+                                  "duplicate_ref",
+                                  "self_connection",
+                                  "plan_schema_invalid",
+                                  "no_controller",
+                                  "code_language_mismatch",
+                                  "voltage_mismatch",
+                                  "supply_voltage_out_of_range",
+                                  "driver_required",
+                                  "led_needs_resistor",
+                                  "missing_ground",
+                                  "no_common_ground",
+                                  "pin_current_exceeded",
+                                  "mcu_current_exceeded",
+                                  "power_budget_exceeded",
+                                  "no_power_source",
+                                  "part_unpowered",
+                                  "power_sources_shorted",
+                                  "short_circuit",
+                                  "pin_reused",
+                                  "output_conflict",
+                                  "input_only_as_output",
+                                  "reserved_pin",
+                                  "pin_capability",
+                                  "refuse_mains",
+                                  "refuse_lipo_unprotected",
+                                  "refuse_weapon",
+                                  "refuse_high_voltage"
+                                ]
+                              },
+                              "severity": {
+                                "type": "string",
+                                "enum": [
+                                  "block",
+                                  "refuse"
+                                ]
+                              },
+                              "message": {
+                                "type": "string",
+                                "maxLength": 400
+                              },
+                              "parts": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "default": []
+                              },
+                              "pins": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "ref": {
+                                      "type": "string",
+                                      "pattern": "^[A-Z]{1,4}\\d{1,3}$"
+                                    },
+                                    "pin": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 24
+                                    }
+                                  },
+                                  "required": [
+                                    "ref",
+                                    "pin"
+                                  ]
+                                },
+                                "default": []
+                              },
+                              "hint": {
+                                "type": "string",
+                                "maxLength": 400
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "severity",
+                              "message"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "passed",
+                        "attempts",
+                        "issues"
+                      ]
+                    },
+                    "diagram": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "version": {
+                          "type": "number",
+                          "enum": [
+                            1
+                          ]
+                        },
+                        "nodes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "ref": {
+                                "type": "string"
+                              },
+                              "part_id": {
+                                "type": "string"
+                              },
+                              "label": {
+                                "type": "string"
+                              },
+                              "element": {
+                                "type": "string"
+                              },
+                              "attrs": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "string"
+                                },
+                                "default": {}
+                              },
+                              "pins": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "element_pin": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "element_pin"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "ref",
+                              "part_id",
+                              "label",
+                              "element",
+                              "pins"
+                            ]
+                          }
+                        },
+                        "wires": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "from": {
+                                "type": "object",
+                                "properties": {
+                                  "ref": {
+                                    "type": "string",
+                                    "pattern": "^[A-Z]{1,4}\\d{1,3}$"
+                                  },
+                                  "pin": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 24
+                                  }
+                                },
+                                "required": [
+                                  "ref",
+                                  "pin"
+                                ]
+                              },
+                              "to": {
+                                "type": "object",
+                                "properties": {
+                                  "ref": {
+                                    "type": "string",
+                                    "pattern": "^[A-Z]{1,4}\\d{1,3}$"
+                                  },
+                                  "pin": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 24
+                                  }
+                                },
+                                "required": [
+                                  "ref",
+                                  "pin"
+                                ]
+                              },
+                              "net": {
+                                "type": "string"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "ground",
+                                  "power",
+                                  "signal",
+                                  "load"
+                                ]
+                              },
+                              "color": {
+                                "type": "string",
+                                "pattern": "^#[0-9a-f]{6}$/i"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "from",
+                              "to",
+                              "net",
+                              "kind",
+                              "color"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "version",
+                        "nodes",
+                        "wires"
+                      ]
+                    },
+                    "reference_project_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "summary",
+                    "verdict",
+                    "closest_reason",
+                    "language",
+                    "power_mode",
+                    "bom",
+                    "missing",
+                    "connections",
+                    "steps",
+                    "code",
+                    "libraries",
+                    "safety_notes",
+                    "validation",
+                    "diagram",
+                    "reference_project_id"
+                  ]
+                },
+                "maxItems": 3
+              },
+              "refusal": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "default": null,
+                "required": [
+                  "code",
+                  "message"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "plan_version",
+              "plans"
+            ]
+          }
+        },
+        "required": [
+          "job",
+          "photos",
+          "parts",
+          "result"
+        ]
+      },
+      "UpdatePartsResponse": {
+        "type": "object",
+        "properties": {
+          "job": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "photo",
+                  "inventory"
+                ]
+              },
+              "goal": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "intent": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "specific",
+                  "discovery",
+                  null
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "processing",
+                  "needs_check",
+                  "ready",
+                  "needs_review"
+                ]
+              },
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "queued",
+                  "detecting",
+                  "matching",
+                  "awaiting_confirmation",
+                  "planning",
+                  "validating",
+                  "rendering",
+                  "done",
+                  "failed"
+                ]
+              },
+              "plan_version": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "error_code": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "unauthorized",
+                  "forbidden",
+                  "rate_limited",
+                  "turnstile_failed",
+                  "ticket_invalid",
+                  "quota_exceeded",
+                  "bad_request",
+                  "not_found",
+                  "conflict",
+                  "payload_too_large",
+                  "too_many_photos",
+                  "no_photos",
+                  "unsupported_media_type",
+                  "heic_not_converted",
+                  "image_too_small",
+                  "image_corrupt",
+                  "goal_too_long",
+                  "unknown_part",
+                  "photos_unusable",
+                  "no_parts_detected",
+                  "model_output_invalid",
+                  "model_unavailable",
+                  "plan_invalid_after_repairs",
+                  "internal",
+                  null
+                ]
+              },
+              "photo_count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4
+              },
+              "summary": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "title": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "default": null
+                  },
+                  "verdict": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "enum": [
+                      "yes",
+                      "yes_missing",
+                      "no_closest",
+                      "refused",
+                      null
+                    ],
+                    "default": null
+                  },
+                  "missing_count": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "default": null
+                  },
+                  "needs_check_count": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "default": null
+                  },
+                  "idea_titles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "default": []
+                  }
+                }
+              }
+            },
+            "required": [
+              "id",
+              "created_at",
+              "updated_at",
+              "source",
+              "goal",
+              "intent",
+              "status",
+              "stage",
+              "plan_version",
+              "error_code",
+              "photo_count",
+              "summary"
+            ]
+          }
+        },
+        "required": [
+          "job"
+        ]
+      },
+      "DeleteJobResponse": {
+        "type": "object",
+        "properties": {
+          "deleted": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "deleted"
+        ]
+      },
+      "CatalogSearchResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "part_id": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 80,
+                  "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string",
+                  "enum": [
+                    "microcontroller",
+                    "motor_driver",
+                    "motor",
+                    "servo",
+                    "sensor",
+                    "display",
+                    "communication",
+                    "power",
+                    "regulator",
+                    "battery",
+                    "charger",
+                    "level_shifter",
+                    "passive",
+                    "led",
+                    "input",
+                    "relay",
+                    "audio",
+                    "breadboard",
+                    "wire",
+                    "module",
+                    "other"
+                  ]
+                },
+                "has_profile": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "part_id",
+                "name",
+                "category",
+                "has_profile"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "InventoryResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "part_id": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 80,
+                  "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string",
+                  "enum": [
+                    "microcontroller",
+                    "motor_driver",
+                    "motor",
+                    "servo",
+                    "sensor",
+                    "display",
+                    "communication",
+                    "power",
+                    "regulator",
+                    "battery",
+                    "charger",
+                    "level_shifter",
+                    "passive",
+                    "led",
+                    "input",
+                    "relay",
+                    "audio",
+                    "breadboard",
+                    "wire",
+                    "module",
+                    "other"
+                  ]
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "part_id",
+                "name",
+                "category",
+                "quantity",
+                "updated_at"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "InventoryPlanResponse": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quota": {
+            "type": "object",
+            "properties": {
+              "limit": {
+                "type": "integer"
+              },
+              "used": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "remaining": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "resets_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "limit",
+              "used",
+              "remaining",
+              "resets_at"
+            ]
+          }
+        },
+        "required": [
+          "job_id",
+          "quota"
+        ]
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/v1/me": {
+      "get": {
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/quota": {
+      "get": {
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quota"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/upload-tickets": {
+      "post": {
+        "summary": "Exchange a Turnstile token for single-use upload tickets (offline queue)",
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "turnstile_token": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "required": [
+                  "turnstile_token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadTicketsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Turnstile failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/jobs": {
+      "post": {
+        "summary": "Upload 1-4 photos and a goal; processing starts immediately",
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "client_request_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "goal": {
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "turnstile_token": {
+                    "type": "string"
+                  },
+                  "upload_ticket": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "photos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "minItems": 1,
+                    "maxItems": 4
+                  }
+                },
+                "required": [
+                  "client_request_id",
+                  "photos"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateJobResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Photo larger than 10 MB",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Not JPEG/PNG/WebP",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "updated_after",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "before",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/jobs/{id}": {
+      "get": {
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteJobResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/jobs/{id}/parts": {
+      "put": {
+        "summary": "Confirm/correct parts; re-runs the plan",
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "plan_version": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "parts": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "part_id": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 80,
+                          "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+                        },
+                        "quantity": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 50
+                        },
+                        "removed": {
+                          "type": "boolean",
+                          "default": false
+                        }
+                      },
+                      "required": [
+                        "part_id",
+                        "quantity"
+                      ]
+                    },
+                    "maxItems": 60
+                  }
+                },
+                "required": [
+                  "plan_version",
+                  "parts"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatePartsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale plan_version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/catalog/search": {
+      "get": {
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "required": true,
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 25,
+              "default": 10
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogSearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inventory": {
+      "get": {
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inventory/{part_id}": {
+      "put": {
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 80,
+              "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+            },
+            "required": true,
+            "name": "part_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "quantity": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 999
+                  }
+                },
+                "required": [
+                  "quantity"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inventory/plan": {
+      "post": {
+        "summary": "What can I build with my inventory? Creates a job without photos",
+        "security": [
+          {
+            "supabaseJwt": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "client_request_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "goal": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "default": ""
+                  }
+                },
+                "required": [
+                  "client_request_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventoryPlanResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate or quota limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {}
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@partspilot/e2e",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:local": "cross-env LOCAL_STACK=1 vitest run",
+    "typecheck": "tsc -p tsconfig.json",
+    "session": "tsx scripts/session.ts",
+    "test:pwa": "playwright test"
+  },
+  "devDependencies": {
+    "@partspilot/shared": "workspace:*",
+    "@supabase/supabase-js": "2.118.0",
+    "cross-env": "10.1.0",
+    "jpeg-js": "0.4.4",
+    "tsx": "4.23.15",
+    "@playwright/test": "1.64.1"
+  }
+}

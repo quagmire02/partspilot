@@ -1,0 +1,26 @@
+{
+  "name": "@partspilot/data",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "import:fritzing": "tsx scripts/import-fritzing.ts",
+    "import:kicad": "tsx scripts/import-kicad.ts",
+    "build:seed": "tsx scripts/build-seed.ts",
+    "embed": "tsx scripts/embed.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@partspilot/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "fast-xml-parser": "5.11.2",
+    "tsx": "4.23.15",
+    "@partspilot/ai": "workspace:*",
+    "@supabase/supabase-js": "2.118.0"
+  }
+}
